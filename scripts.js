@@ -1,3 +1,7 @@
+const deckOfCards = []
+let firstCard = null;
+let secondCard = null;
+
 function askNumber() {
     let numberOfCards;
     do {
@@ -17,16 +21,15 @@ function dealCards() {
         'media/bobrossparrot.gif', 'media/bobrossparrot.gif',
         'media/unicornparrot.gif', 'media/unicornparrot.gif'
         ];
-    const deckOfCards = [];
     const num = askNumber();
-
+    
     for (let i=0; i<num; i++) {
         deckOfCards.push(`
-        <li class="card" data-identifier="card" onclick="turnCard(this)">
-            <div class="back-side" data-identifier="back-face">
+        <li class="card" data-identifier="card" onclick="chooseCard(this)">
+            <div class="face back-side" data-identifier="back-face">
                 <img src="media/front.png" alt="back-side parrot">
             </div>
-            <div class="front-side hidden" data-identifier="front-face">
+            <div class="face front-side" data-identifier="front-face">
                 <img src=${parrotLibrary[i]}>
             </div>
         </li>
@@ -44,11 +47,38 @@ function comparador() {
     return Math.random() - 0.5;
 }
 
+function chooseCard(card) {
+    const turnedList = document.querySelectorAll('.back-side.turn-down');
+    turnCard(card);
+
+    if (turnedList.length % 2 === 0) {
+        firstCard = card;
+        firstCard.removeAttribute('onclick');
+    } else {
+        secondCard = card;
+        secondCard.removeAttribute('onclick');
+        checkMove();
+    }
+}
+
 function turnCard(card) {
     const back = card.querySelector('.back-side');
     const front = card.querySelector('.front-side');
-    back.classList.add('hidden');
-    front.classList.remove('hidden');
+    back.classList.toggle('turn-down');
+    front.classList.toggle('turn-up');
+}
+
+function checkMove() {
+    const firstParrot = firstCard.querySelector('.front-side').innerHTML;
+    const secondParrot = secondCard.querySelector('.front-side').innerHTML;
+    if (firstParrot !== secondParrot) {
+        setTimeout(() => {
+            turnCard(firstCard);
+            turnCard(secondCard);
+        }, 1000);
+        firstCard.setAttribute('onclick', 'chooseCard(this)');
+        secondCard.setAttribute('onclick', 'chooseCard(this)');
+    }
 }
 
 dealCards();

@@ -28,22 +28,39 @@ header {
     .card {
         width: 117px;
         height: 146px;
-        background-color: #a7e9af;
-        border:  1px solid #99cea8;
-        border-radius: 5px;
         margin: 15px;
+        position: relative;
     }
-        .card .front-side, .back-side {
+        .card .face {
             width: 100%;
             height: 100%;
+            background-color: #a7e9af;
+            border:  1px solid #99cea8;
+            border-radius: 5px;
             display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+            backface-visibility: hidden;
+            transition: all .5s;
+            transform-style: preserve-3d;
         }
+            .front-side {
+                transform: rotateY(180deg);
+            }
+            .turn-up {
+                transform: rotateY(0deg) !important;
+            }
+            .turn-down {
+                transform: rotateY(-180deg) !important;
+            }
         .card img {
             width: 100px;
             height: 100px;
-            margin: auto;
         }
 
 .hidden {
     display: none !important;
 }
+
