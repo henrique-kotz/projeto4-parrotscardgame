@@ -1,9 +1,10 @@
 const deckOfCards = []
+let numberOfCards;
 let firstCard = null;
 let secondCard = null;
+let counter = 0;
 
 function askNumber() {
-    let numberOfCards;
     do {
         numberOfCards = prompt('Com quantas cartas você quer jogar? (pares entre 4 e 14)');
     } while(numberOfCards > 14 || numberOfCards < 4 || (numberOfCards % 2 == 1));
@@ -50,6 +51,7 @@ function comparador() {
 function chooseCard(card) {
     const turnedList = document.querySelectorAll('.back-side.turn-down');
     turnCard(card);
+    counter++;
 
     if (turnedList.length % 2 === 0) {
         firstCard = card;
@@ -78,7 +80,18 @@ function checkMove() {
         }, 1000);
         firstCard.setAttribute('onclick', 'chooseCard(this)');
         secondCard.setAttribute('onclick', 'chooseCard(this)');
+    } else {
+        numberOfCards -= 2;
+        if (numberOfCards === 0) {
+            finishGame();
+        }
     }
+}
+
+function finishGame() {
+    setTimeout(() => {
+        alert(`Você ganhou em ${counter} jogadas!`);
+    }, 500);
 }
 
 dealCards();

@@ -50,10 +50,10 @@ header {
                 transform: rotateY(180deg);
             }
             .turn-up {
-                transform: rotateY(0deg) !important;
+                transform: rotateY(0deg);
             }
             .turn-down {
-                transform: rotateY(-180deg) !important;
+                transform: rotateY(-180deg);
             }
         .card img {
             width: 100px;
