@@ -1,8 +1,19 @@
-const deckOfCards = []
+let deckOfCards = []
 let numberOfCards;
 let firstCard = null;
 let secondCard = null;
 let counter = 0;
+let stopClock = null;
+
+const parrotLibrary = [
+        ['media/explodyparrot.gif', 'media/explodyparrot.gif'],
+        ['media/revertitparrot.gif', 'media/revertitparrot.gif'],
+        ['media/tripletsparrot.gif', 'media/tripletsparrot.gif'],
+        ['media/metalparrot.gif', 'media/metalparrot.gif'],
+        ['media/fiestaparrot.gif', 'media/fiestaparrot.gif'],
+        ['media/bobrossparrot.gif', 'media/bobrossparrot.gif'],
+        ['media/unicornparrot.gif', 'media/unicornparrot.gif']
+    ];
 
 function askNumber() {
     do {
@@ -13,16 +24,8 @@ function askNumber() {
 }
 
 function dealCards() {
-    const parrotLibrary = [
-        'media/explodyparrot.gif', 'media/explodyparrot.gif',
-        'media/revertitparrot.gif', 'media/revertitparrot.gif',
-        'media/tripletsparrot.gif', 'media/tripletsparrot.gif',
-        'media/metalparrot.gif', 'media/metalparrot.gif',
-        'media/fiestaparrot.gif', 'media/fiestaparrot.gif',
-        'media/bobrossparrot.gif', 'media/bobrossparrot.gif',
-        'media/unicornparrot.gif', 'media/unicornparrot.gif'
-        ];
     const num = askNumber();
+    const shuffledParrots =  sortLibrary(num);
     
     for (let i=0; i<num; i++) {
         deckOfCards.push(`
@@ -31,24 +34,34 @@ function dealCards() {
                 <img src="media/front.png" alt="back-side parrot">
             </div>
             <div class="face front-side" data-identifier="front-face">
-                <img src=${parrotLibrary[i]}>
+                <img src=${shuffledParrots[i]}>
             </div>
         </li>
         `);
     }
 
     const deck = document.querySelector('.deck');
-    deckOfCards.sort(comparador);
+    deckOfCards.sort(() => Math.random() - 0.5);
     for (let i=0; i<deckOfCards.length; i++) {
         deck.innerHTML += deckOfCards[i];
     }
 }
 
-function comparador() {
-    return Math.random() - 0.5;
+function sortLibrary(num) {
+    const numPairs = num/2;
+    const shuffled = [];
+    parrotLibrary.sort(() => Math.random() - 0.5);
+
+    for (let i=0; i<numPairs; i++) {
+        shuffled.push(parrotLibrary[i][0]);
+        shuffled.push(parrotLibrary[i][1]);
+    }
+
+    return shuffled;
 }
 
 function chooseCard(card) {
+    if (counter === 0) startClock();
     const turnedList = document.querySelectorAll('.back-side.turn-down');
     turnCard(card);
     counter++;
@@ -89,9 +102,40 @@ function checkMove() {
 }
 
 function finishGame() {
+    clearInterval(stopClock);
+    const time = document.querySelector('header p').innerHTML;
+    let restart = null;
+
     setTimeout(() => {
-        alert(`Você ganhou em ${counter} jogadas!`);
+        alert(`Você ganhou em ${counter} jogadas levando ${time} segundos!`);
+        restart = prompt('Deseja reiniciar a partida? (sim/não)');
+
+        if (restart.trim().toLowerCase() === 'sim') {
+            console.log('yay');
+            restartGame();
+        }
     }, 500);
+}
+
+function startClock() {
+    const clock = document.querySelector('header p');
+
+    stopClock = setInterval(() => {
+        clock.innerHTML = parseInt(clock.innerHTML) + 1;
+    }, 1000);
+}
+
+function restartGame() {
+    document.querySelector('.deck').innerHTML = '';
+    document.querySelector('header p').innerHTML = 0;
+
+
+    deckOfCards = []
+    numberOfCards = null;
+    counter = 0;
+    stopClock = null;
+    
+    dealCards();
 }
 
 dealCards();
