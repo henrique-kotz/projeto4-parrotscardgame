@@ -74,7 +74,6 @@ function chooseCard(card) {
         secondCard.removeAttribute('onclick');
 
         const unselectedCards = document.querySelectorAll('.card .front-side:not(.turn-up)');
-        console.log(unselectedCards);
         if (unselectedCards) {
             for (let i=0; i<unselectedCards.length; i++) {
                 unselectedCards[i].parentNode.removeAttribute('onclick');
@@ -102,23 +101,25 @@ function checkMove(unselectedCards) {
             turnCard(secondCard);
             firstCard.setAttribute('onclick', 'chooseCard(this)');
             secondCard.setAttribute('onclick', 'chooseCard(this)');
-            console.log('virou');
+
+            if (unselectedCards) {
+                for (let i=0; i<unselectedCards.length; i++) {
+                    unselectedCards[i].parentNode.setAttribute('onclick', 'chooseCard(this)');
+                }
+            }
         }, 1000);
     } else {
         numberOfCards -= 2;
         if (numberOfCards === 0) {
             finishGame();
         }
-    }
 
-    setTimeout(() => {
-        console.log('colocou de volta');
         if (unselectedCards) {
             for (let i=0; i<unselectedCards.length; i++) {
                 unselectedCards[i].parentNode.setAttribute('onclick', 'chooseCard(this)');
             }
         }
-    }, 1000);
+    }
 }
 
 function finishGame() {
@@ -131,7 +132,6 @@ function finishGame() {
         restart = prompt('Deseja reiniciar a partida? (sim/não)');
 
         if (restart.trim().toLowerCase() === 'sim') {
-            console.log('yay');
             restartGame();
         }
     }, 500);
