@@ -72,7 +72,16 @@ function chooseCard(card) {
     } else {
         secondCard = card;
         secondCard.removeAttribute('onclick');
-        checkMove();
+
+        const unselectedCards = document.querySelectorAll('.card .front-side:not(.turn-up)');
+        console.log(unselectedCards);
+        if (unselectedCards) {
+            for (let i=0; i<unselectedCards.length; i++) {
+                unselectedCards[i].parentNode.removeAttribute('onclick');
+            }
+        }
+
+        checkMove(unselectedCards);
     }
 }
 
@@ -83,22 +92,33 @@ function turnCard(card) {
     front.classList.toggle('turn-up');
 }
 
-function checkMove() {
+function checkMove(unselectedCards) {
     const firstParrot = firstCard.querySelector('.front-side').innerHTML;
     const secondParrot = secondCard.querySelector('.front-side').innerHTML;
+
     if (firstParrot !== secondParrot) {
         setTimeout(() => {
             turnCard(firstCard);
             turnCard(secondCard);
+            firstCard.setAttribute('onclick', 'chooseCard(this)');
+            secondCard.setAttribute('onclick', 'chooseCard(this)');
+            console.log('virou');
         }, 1000);
-        firstCard.setAttribute('onclick', 'chooseCard(this)');
-        secondCard.setAttribute('onclick', 'chooseCard(this)');
     } else {
         numberOfCards -= 2;
         if (numberOfCards === 0) {
             finishGame();
         }
     }
+
+    setTimeout(() => {
+        console.log('colocou de volta');
+        if (unselectedCards) {
+            for (let i=0; i<unselectedCards.length; i++) {
+                unselectedCards[i].parentNode.setAttribute('onclick', 'chooseCard(this)');
+            }
+        }
+    }, 1000);
 }
 
 function finishGame() {
